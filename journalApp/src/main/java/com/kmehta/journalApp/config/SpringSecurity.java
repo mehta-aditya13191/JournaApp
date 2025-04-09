@@ -20,37 +20,38 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SpringSecurity   {
+public class SpringSecurity {
 
     @Autowired
     private UserDetailServiceImp userDetailsService;
 
-   @Bean
-   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(request ->request
-                .requestMatchers("/journal/**","/user/**").authenticated()
-                .anyRequest().permitAll())
-                .httpBasic(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .build();
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return
+                http
+                        .authorizeHttpRequests(request -> request
+                                .requestMatchers("/journal/**", "/user/**").authenticated()
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .anyRequest().permitAll())
+                        .httpBasic(Customizer.withDefaults())
+                        .csrf(AbstractHttpConfigurer::disable)
+                        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .build();
 
 
     }
-
 
 
     @Bean
-    public AuthenticationProvider authProvider(){
+    public AuthenticationProvider authProvider() {
 
-       DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 
-       provider.setUserDetailsService(userDetailsService);
-       provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
 
-       return provider;
+        return provider;
     }
-
 
 
     @Bean
