@@ -10,36 +10,41 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Component
+@Service
 public class UserEntityService {
     @Autowired
     public UserEntityRepository userEntityRepository;
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public void saveNewUser(UserEntity userEntity){
+    public boolean saveNewUser(UserEntity userEntity){
         try {
             userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
             userEntity.setRoles(Arrays.asList("USER"));
             userEntityRepository.save(userEntity);
+            return true;
         }
         catch (Exception e){
             log.error("Exception",e);
+            return false;
         }
     }
 
-    public void saveUser(UserEntity userEntity){
+    public boolean saveUser(UserEntity userEntity){
         try {
             userEntityRepository.save(userEntity);
+            return true;
         }
         catch (Exception e){
             log.error("Exception",e);
+            return false;
         }
     }
 
