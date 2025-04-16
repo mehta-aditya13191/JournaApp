@@ -76,7 +76,7 @@ public class UserController {
 
         String greeting="";
         if(weatherResponse!=null){
-            greeting = ",Weather feels like " + weatherResponse.getCurrent().getFeelslike();
+            greeting = ", Weather feels like " + weatherResponse.getCurrent().getFeelslike();
         }
 
 
